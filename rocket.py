@@ -72,7 +72,11 @@ class Rocket:
         self.stars.add(star)
 
     def _update_aliens(self):
-        """Update the positions of all aliens in the fleet."""
+        """
+        Check if the fleet is at an edge,
+          then update the positions of all aliens in the fleet.
+        """
+        self._check_fleet_edges
         self.aliens.update()
 
     # ---------------- ALIEN FLEET ---------------- #
@@ -91,6 +95,20 @@ class Rocket:
         for row_number in range(number_rows):
             for alien_number in range(number_aliens_x):
                 self._create_alien(alien_number, row_number)
+
+    def _check_fleet_edges(self):
+        """Respond appropriately if any aliens have reached an edge."""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Drop the entire fleet and change the fleet's direction."""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+    
 
     def _create_alien(self, alien_number, row_number):
         """Create an alien and place it in the row."""
