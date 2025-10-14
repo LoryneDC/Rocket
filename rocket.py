@@ -36,6 +36,7 @@ class Rocket:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
 
     # ---------------- STAR FIELD ---------------- #
@@ -69,6 +70,10 @@ class Rocket:
         star.rect.y = star.y + randint(-15, 15)
 
         self.stars.add(star)
+
+    def _update_aliens(self):
+        """Update the positions of all aliens in the fleet."""
+        self.aliens.update()
 
     # ---------------- ALIEN FLEET ---------------- #
     def _create_fleet(self):
