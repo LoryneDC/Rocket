@@ -11,7 +11,7 @@ class Alien(Sprite):
         self.settings = ai_game.settings
 
         # Load and scale the alien image
-        self.image = pygame.image.load('../assets/images/alien.bmp')
+        self.image = pygame.image.load('/home/krobus/Documents/rocket_project/assets/images/alien.bmp')
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
 

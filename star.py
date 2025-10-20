@@ -10,7 +10,7 @@ class Star(Sprite):
         self.screen = ai_game.screen
 
         # Load and scale the star image
-        self.image = pygame.image.load('../assets/images/star.png')
+        self.image = pygame.image.load('/home/krobus/Documents/rocket_project/assets/images/star.png')
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.rect = self.image.get_rect()
 
