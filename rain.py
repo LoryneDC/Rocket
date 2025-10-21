@@ -13,7 +13,7 @@ class Raindrop(Sprite):
         self.settings = ai_game.settings
 
         # Load and scale the raindrop image
-        self.image = pygame.image.load('/home/krobus/Documents/rocket_project/assets/images/raindrop.bmp')
+        self.image = pygame.image.load('/home/krobus/Documents/rocket_project/assets/images/gota.png')
         self.image = pygame.transform.scale(self.image, (25, 25))
         self.rect = self.image.get_rect()
 
