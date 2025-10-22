@@ -1,7 +1,11 @@
 import sys
+from time import sleep
+
 import pygame
+
 from random import randint, random  # For randomness
 from settings_class import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -21,6 +25,9 @@ class Rocket:
             (self.settings.screen_width, self.settings.screen_height)
         )
         pygame.display.set_caption("Rocket")
+
+        # Create an instance to store game statistics.
+        self.stats = GameStats(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -59,6 +66,23 @@ class Rocket:
             for star_number in range(number_stars_x):
                 if random() < 0.3:  # 30% chance to spawn each star
                     self._create_star(star_number, row_number)
+
+    def _ship_hit(self):
+        """Respond to the ship being hit by an alien."""
+
+        # Decrement ships_left.
+        self.stats.ships_left -= 1
+
+        # Get rid of any reaining aliens and bullets.
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Create a new fleet and center the ship.
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Pause.
+        sleep(0.5)
 
     def _create_star(self, star_number, row_number):
         """Create a single star and place it randomly in the grid."""
@@ -119,7 +143,7 @@ class Rocket:
 
         # Look for alien-ship collisions.
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print("Ship hit!!")
+            self._ship_hit()
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
