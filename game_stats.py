@@ -10,7 +10,7 @@ class GameStats:
         self.game_active = False
 
         # Start game in an active state
-        self.game_active = True
+        #self.game_active = True
 
         # Track hits
         self.ship_hits = 0

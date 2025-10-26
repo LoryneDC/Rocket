@@ -6,6 +6,7 @@ import pygame
 from random import randint, random  # For randomness
 from settings_class import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
@@ -39,6 +40,9 @@ class Rocket:
         self._create_star_field()
         self._create_rain_field()
         self._create_fleet()
+
+        # Make the Play button.
+        self.play_button = Button(self, "Play")
 
     # ---------------- MAIN GAME LOOP ---------------- #
     def run_game(self):
@@ -240,6 +244,15 @@ class Rocket:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos):
+        """Start a new game when the player clicks Play."""
+        if self.play_button.rect.collidepoint(mouse_pos):
+            self.stats.game_active = True
+
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_RIGHT:
@@ -292,6 +305,9 @@ class Rocket:
         hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
         self.screen.blit(hits_text, (20, 20))
 
+        # Draw the play button if the game is inactive.
+        if not self.stats.game_active:
+            self.play_button.draw_button()
 
         pygame.display.flip()
 
