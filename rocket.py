@@ -72,24 +72,23 @@ class Rocket:
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
+        self.stats.ship_hits += 1  # Track how many times ship is hit
 
-        if self.stats.ships_left > 0:     
-            # Decrement ships_left.
+        if self.stats.ship_hits >= 3:  # Game over condition
+            print("💀 GAME OVER: Ship was hit too many times!")
+            self.stats.game_active = False
+            return
+
+        if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
-
-            # Get rid of any reaining aliens and bullets.
             self.aliens.empty()
             self.bullets.empty()
-
-            # Create a new fleet and center the ship.
             self._create_fleet()
             self.ship.center_ship()
-
-            # Pause.
             sleep(0.5)
-        
         else:
             self.stats.game_active = False
+
 
     def _check_aliens_bottom(self):
         """Check if any aliens have reached the bottom of the screen."""
@@ -215,15 +214,20 @@ class Rocket:
 
     def _check_bullet_alien_collisions(self):
         """Respond to bullet-alien collisions."""
-        # Remove any bullets and aliens that have collided.
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
-        collisions = pygame.sprite.groupcollide(
-            self.bullets, self.aliens, True, True)
-        
+        if collisions:
+            self.stats.alien_hits += 1
+            print(f"🚀 Alien hit! Total: {self.stats.alien_hits}")
+
+            if self.stats.alien_hits >= 105:  # Example win condition
+                print("🏆 YOU WIN! All aliens destroyed!")
+                self.stats.game_active = False
+
         if not self.aliens:
-            # Destroy existing bullets and create new fleet.
             self.bullets.empty()
             self._create_fleet()
+
 
     # ---------------- EVENT HANDLING ---------------- #
     def _check_events(self):
@@ -283,6 +287,11 @@ class Rocket:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        font = pygame.font.SysFont(None, 36)
+        hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
+        self.screen.blit(hits_text, (20, 20))
+
 
         pygame.display.flip()
 

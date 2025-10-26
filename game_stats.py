@@ -1,14 +1,17 @@
 class GameStats:
-    """Track statistics for Alien Invasion (Rocket.py)."""
+    """Track statistics for Rocket."""
 
     def __init__(self, ai_game):
         """Initialize statistics."""
-
         self.settings = ai_game.settings
         self.reset_stats()
 
-        # Start Alien Invasion (Rocket) in an active state.
+        # Start game in an active state
         self.game_active = True
+
+        # Track hits
+        self.ship_hits = 0
+        self.alien_hits = 0
 
     def reset_stats(self):
         """Initialize statistics that can change during the game."""
