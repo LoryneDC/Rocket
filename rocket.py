@@ -225,14 +225,36 @@ class Rocket:
             self.stats.alien_hits += 1
             print(f"🚀 Alien hit! Total: {self.stats.alien_hits}")
 
-            if self.stats.alien_hits >= 105:  # Example win condition
+            if self.stats.alien_hits >= 1000:  # Example win condition
                 print("🏆 YOU WIN! All aliens destroyed!")
                 self.stats.game_active = False
 
         if not self.aliens:
+            # Destroy existing bullets and create new
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
+
+    # ---------------- GAME STATE MANAGEMENT ---------------- #
+
+    def _start_game(self):
+        """A consolidated method to start a new game."""
+        # Reset the game statistics.
+        self.stats.reset_stats()
+        self.stats.game_active = True
+
+        # Get rid of any remaining aliens and bullets.
+        self.aliens.empty()
+        self.bullets.empty()
+
+        # Create a new fleet and center the ship.
+        self._create_fleet()
+        self.ship.center_ship()
+
+        # Hide the mouse cursor.
+        pygame.mouse.set_visible(False)
+        print("🎮 Game started!") # Add feedback for keyboard start
 
     # ---------------- EVENT HANDLING ---------------- #
     def _check_events(self):
@@ -253,22 +275,10 @@ class Rocket:
         """Start a new game when the player clicks Play."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
+            # Reset the game settings.
+            self.settings.initialize_dynamic_settings
+            self._start_game()
             
-            # Reset the game statistics.
-            self.stats.reset_stats()
-            self.stats.game_active = True
-
-            # Get rid of any remaining aliend and bullets.
-            self.aliens.empty()
-            self.bullets.empty()
-
-            # Create a new fleet and center the ship.
-            self._create_fleet()
-            self.ship.center_ship()
-
-            # Hide the mouse cursor.
-            pygame.mouse.set_visible(False)
-
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
         if event.key == pygame.K_RIGHT:
@@ -283,6 +293,9 @@ class Rocket:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        # New: Start game with 'p' key
+        elif event.key == pygame.K_p and not self.stats.game_active:
+            self._start_game()
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
@@ -324,6 +337,10 @@ class Rocket:
         # Draw the play button if the game is inactive.
         if not self.stats.game_active:
             self.play_button.draw_button()
+            # Optional: Add a note to press 'P'
+            press_p_text = font.render("Press P to Play", True, (255, 255, 255))
+            p_text_rect = press_p_text.get_rect(center=(self.settings.screen_width // 2, self.play_button.rect.bottom + 50))
+            self.screen.blit(press_p_text, p_text_rect)
 
         pygame.display.flip()
 
