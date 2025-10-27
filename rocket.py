@@ -225,7 +225,7 @@ class Rocket:
             self.stats.alien_hits += 1
             print(f"🚀 Alien hit! Total: {self.stats.alien_hits}")
 
-            if self.stats.alien_hits >= 1000:  # Example win condition
+            if self.stats.alien_hits >= 1000   :  # Example win condition
                 print("🏆 YOU WIN! All aliens destroyed!")
                 self.stats.game_active = False
 
@@ -234,9 +234,6 @@ class Rocket:
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
-
-
-    # ---------------- GAME STATE MANAGEMENT ---------------- #
 
     def _start_game(self):
         """A consolidated method to start a new game."""
