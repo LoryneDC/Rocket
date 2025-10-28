@@ -27,6 +27,9 @@ class Rocket:
         )
         pygame.display.set_caption("Rocket")
 
+        # Necesario para el posicionamiento central de botones
+        self.screen_rect = self.screen.get_rect() 
+
         # Create an instance to store game statistics.
         self.stats = GameStats(self)
 
@@ -43,6 +46,32 @@ class Rocket:
 
         # Make the Play button.
         self.play_button = Button(self, "Play")
+
+        # Make the Difficulty buttons
+        self.easy_button = Button(self, "Easy")
+        self.medium_button = Button(self, "Medium")
+        self.hard_button = Button(self, "Hard")
+        
+        # --- Posicionamiento de Botones (Fijos) ---
+        
+        # Posición central de referencia
+        center_y = self.screen_rect.centery 
+        y_spacing = self.play_button.rect.height + 20 # Espacio entre botones
+        
+        # Posicionar Easy, Medium y Hard arriba del centro
+        # Easy: -1.5 espacios desde el centro
+        self.easy_button.rect.centery = center_y - (1.5 * y_spacing) 
+        # Medium: -0.5 espacios desde el centro
+        self.medium_button.rect.centery = center_y - (0.5 * y_spacing) 
+        # Hard: +0.5 espacios desde el centro
+        self.hard_button.rect.centery = center_y + (0.5 * y_spacing)  
+
+        # Posicionar el botón Play (para "Continuar" o "Game Over")
+        # Play: +2.5 espacios desde el centro
+        self.play_button.rect.centery = center_y + (2.5 * y_spacing)
+
+        # Start with medium difficulty selected (or default)
+        self.settings.set_difficulty('medium')
 
     # ---------------- MAIN GAME LOOP ---------------- #
     def run_game(self):
@@ -237,6 +266,10 @@ class Rocket:
 
     def _start_game(self):
         """A consolidated method to start a new game."""
+        # Note: initialize_dynamic_settings() is now done in set_difficulty(), 
+        # but calling it here ensures speeds are reset if 'p' is pressed before a button.
+        self.settings.initialize_dynamic_settings()
+
         # Reset the game statistics.
         self.stats.reset_stats()
         self.stats.game_active = True
@@ -269,12 +302,24 @@ class Rocket:
                 self._check_play_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
-        """Start a new game when the player clicks Play."""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.stats.game_active:
-            # Reset the game settings.
-            self.settings.initialize_dynamic_settings
-            self._start_game()
+        """Start a new game when the player clicks Play or selects difficulty."""
+        if not self.stats.game_active:
+            # ... (código para play_button_clicked)
+
+            # Check for Difficulty buttons (Inactive state)
+            easy_clicked = self.easy_button.rect.collidepoint(mouse_pos)
+            medium_clicked = self.medium_button.rect.collidepoint(mouse_pos)
+            hard_clicked = self.hard_button.rect.collidepoint(mouse_pos)
+
+            if easy_clicked:
+                self.settings.set_difficulty('easy')
+                self._start_game() # <-- Inicia el juego
+            elif medium_clicked:
+                self.settings.set_difficulty('medium')
+                self._start_game() # <-- Inicia el juego
+            elif hard_clicked:
+                self.settings.set_difficulty('hard')
+                self._start_game() # <-- Inicia el juego
             
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
@@ -331,12 +376,18 @@ class Rocket:
         hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
         self.screen.blit(hits_text, (20, 20))
 
-        # Draw the play button if the game is inactive.
+        # Draw the buttons if the game is inactive.
         if not self.stats.game_active:
+            # Draw the buttons below the score text
             self.play_button.draw_button()
+            self.easy_button.draw_button()
+            self.medium_button.draw_button()
+            self.hard_button.draw_button()
+            
             # Optional: Add a note to press 'P'
+            font = pygame.font.SysFont(None, 36)
             press_p_text = font.render("Press P to Play", True, (255, 255, 255))
-            p_text_rect = press_p_text.get_rect(center=(self.settings.screen_width // 2, self.play_button.rect.bottom + 50))
+            p_text_rect = press_p_text.get_rect(center=(self.settings.screen_width // 2, self.hard_button.rect.bottom + 50))
             self.screen.blit(press_p_text, p_text_rect)
 
         pygame.display.flip()

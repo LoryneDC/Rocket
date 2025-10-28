@@ -43,5 +43,23 @@ class Settings:
         self.ship_speed *= self.speedup_scale
         self.bullet_speed *= self.speedup_scale
         self.alien_speed *= self.speedup_scale
+
+    def set_difficulty(self, level='medium'):
+        """Set game parameters based on the chosen difficulty level."""
+        self.initialize_dynamic_settings() # Start from base speeds
+
+        if level == 'easy':
+            self.ship_limit = 5          # More lives
+            self.alien_speed *= 0.8      # Slower aliens
+            self.bullets_allowed = 5     # More bullets
+            self.fleet_drop_speed = 5    # Slower drop
+        elif level == 'hard':
+            self.ship_limit = 2          # Fewer lives
+            self.alien_speed *= 1.5      # Faster aliens
+            self.bullets_allowed = 2     # Fewer bullets
+            self.fleet_drop_speed = 20   # Faster drop
+        else: # Medium (Default)
+            # Default settings already set up for medium
+            pass
         
 
