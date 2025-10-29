@@ -372,9 +372,9 @@ class Rocket:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
 
-        font = pygame.font.SysFont(None, 36)
-        hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
-        self.screen.blit(hits_text, (20, 20))
+        #font = pygame.font.SysFont(None, 36)
+        #hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
+        #self.screen.blit(hits_text, (20, 20))
 
         # Draw the buttons if the game is inactive.
         if not self.stats.game_active:
