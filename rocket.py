@@ -113,6 +113,12 @@ class Rocket:
         if self.stats.ship_hits >= 3:  # Game over condition
             print("💀 GAME OVER: Ship was hit too many times!")
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
+
+            # Reset score when ship dies completely
+            self.stats.score = 0
+            self.sb.prep_score()
+
             return
 
         if self.stats.ships_left > 0:
@@ -126,6 +132,9 @@ class Rocket:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
 
+            # Reset score when all ships are gone
+            self.stats.score = 0
+            self.sb.prep_score()
 
     def _check_aliens_bottom(self):
         """Check if any aliens have reached the bottom of the screen."""
@@ -254,7 +263,8 @@ class Rocket:
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
 
         if collisions:
-            self.stats.score += self.settings.alien_points
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
 
         if not self.aliens:
@@ -303,7 +313,6 @@ class Rocket:
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks Play or selects difficulty."""
         if not self.stats.game_active:
-            # ... (código para play_button_clicked)
 
             # Check for Difficulty buttons (Inactive state)
             easy_clicked = self.easy_button.rect.collidepoint(mouse_pos)
@@ -312,13 +321,13 @@ class Rocket:
 
             if easy_clicked:
                 self.settings.set_difficulty('easy')
-                self._start_game() # <-- Inicia el juego
+                self._start_game() 
             elif medium_clicked:
                 self.settings.set_difficulty('medium')
-                self._start_game() # <-- Inicia el juego
+                self._start_game() 
             elif hard_clicked:
                 self.settings.set_difficulty('hard')
-                self._start_game() # <-- Inicia el juego
+                self._start_game() 
             
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
