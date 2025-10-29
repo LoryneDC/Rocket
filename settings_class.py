@@ -26,6 +26,9 @@ class Settings:
 
         self.initialize_dynamic_settings()
 
+        # Scoring
+        self.alien_points = 50
+
     def initialize_dynamic_settings(self):
         """Initialize settins that change throughout the game."""
         self.ship_speed = 1.5
