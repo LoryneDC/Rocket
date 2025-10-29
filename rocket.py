@@ -6,6 +6,7 @@ import pygame
 from random import randint, random  # For randomness
 from settings_class import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -31,7 +32,9 @@ class Rocket:
         self.screen_rect = self.screen.get_rect() 
 
         # Create an instance to store game statistics.
+        # and create a scoreboard.
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -371,6 +374,9 @@ class Rocket:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+
+        # Draw the score information.
+        self.sb.show_score()
 
         #font = pygame.font.SysFont(None, 36)
         #hits_text = font.render(f"Ship hits: {self.stats.ship_hits} | Alien hits: {self.stats.alien_hits}", True, (255, 255, 255))
