@@ -123,6 +123,7 @@ class Rocket:
 
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             self.aliens.empty()
             self.bullets.empty()
             self._create_fleet()
@@ -272,7 +273,7 @@ class Rocket:
             # Increase level.
             self.stats.level += 1
             self.sb.prep_level()
-              
+
             # Destroy existing bullets and create new
             self.bullets.empty()
             self._create_fleet()
@@ -326,6 +327,7 @@ class Rocket:
 
             self.sb.prep_score()
             self.sb.prep_level()
+            self.sb.prep_ships()
 
             if easy_clicked:
                 self.settings.set_difficulty('easy')
