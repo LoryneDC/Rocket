@@ -266,9 +266,13 @@ class Rocket:
             for aliens in collisions.values():  
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
-            self.sb.check_high_score
+            self.sb.check_high_score()
 
         if not self.aliens:
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
+              
             # Destroy existing bullets and create new
             self.bullets.empty()
             self._create_fleet()
@@ -319,6 +323,9 @@ class Rocket:
             easy_clicked = self.easy_button.rect.collidepoint(mouse_pos)
             medium_clicked = self.medium_button.rect.collidepoint(mouse_pos)
             hard_clicked = self.hard_button.rect.collidepoint(mouse_pos)
+
+            self.sb.prep_score()
+            self.sb.prep_level()
 
             if easy_clicked:
                 self.settings.set_difficulty('easy')
